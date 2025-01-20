@@ -54,9 +54,18 @@ func CheckDecryptedText(c *gin.Context) {
 }
 
 func CheckFinalAnswer(c *gin.Context) {
-	book_title := c.Param("book_title")
 
-	if book_title == bookTitle {
+	var requestData struct {
+		BookTitle string `json:"BookTitle"`
+	}
+
+	if err := c.ShouldBindJSON(&requestData); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
+		return
+	}
+
+
+	if requestData.BookTitle == bookTitle {
 		c.JSON(http.StatusOK, gin.H{"message": "ยินดีด้วย คุณแก้ผ่านด่านทั้งหมดแล้ว 🎉"})
 	} else {
 		// ถ้าไม่ตรงให้ส่ง response ว่าไม่ตรง

@@ -12,18 +12,6 @@ const getRequestOptions = () => {
   };
 };
 
-const postRequestOptions = () => {
-  const Authorization = localStorage.getItem("token");
-  const Bearer = localStorage.getItem("token_type");
-  return {
-    method: "POST", 
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `${Bearer} ${Authorization}`,
-    },
-  };
-};
-
 export const getHashOne = async (): Promise<string | false> => {
   try {
     const response = await fetch(`${apiUrl}/hashone`, getRequestOptions());
@@ -112,11 +100,18 @@ export const getAsymmetricData = async (): Promise<
   }
 };
 
-export const checkDecryptedText = async (): Promise<any | false> => {
+export const checkDecryptedText = async (decryptedText: string): Promise<any | false> => {
   try {
     const response = await fetch(
       `${apiUrl}/checkAnswerAsymmetric`,
-      postRequestOptions()
+      {
+        method: 'POST', 
+        headers: {
+          "Content-Type": "application/json", 
+          "Authorization": `${localStorage.getItem("token_type")} ${localStorage.getItem("token")}` // ถ้าต้องการส่ง token สำหรับ Authorization
+        },
+        body: JSON.stringify({ decryptedText }) 
+      }
     );
 
     if (!response.ok) {
@@ -131,11 +126,18 @@ export const checkDecryptedText = async (): Promise<any | false> => {
   }
 };
 
-export const checkFinalAnswer = async (book_title: string): Promise<any | false> => {
+export const checkFinalAnswer = async (BookTitle: string): Promise<any | false> => {
   try {
     const response = await fetch(
-      `${apiUrl}/checkFinalAnswer?book_title=${book_title}`,
-      getRequestOptions()
+      `${apiUrl}/checkFinalAnswer`,
+      {
+        method: 'POST', 
+        headers: {
+          "Content-Type": "application/json", 
+          "Authorization": `${localStorage.getItem("token_type")} ${localStorage.getItem("token")}` // ถ้าต้องการส่ง token สำหรับ Authorization
+        },
+        body: JSON.stringify({ BookTitle }) 
+      }
     );
 
     if (!response.ok) {

@@ -4,6 +4,7 @@ import Aos from "aos";
 import "aos/dist/aos.css";
 import Challenge1 from "../Challenge1/Offer";
 import Challenge2 from "../Challenge2/Discount";
+import AA from "../aa";
 
 const Home = () => {
   useEffect(() => {
@@ -26,6 +27,7 @@ const Home = () => {
       </section>
       <Challenge1 />
       <Challenge2/>
+      <AA/>
     </>
   );
 };

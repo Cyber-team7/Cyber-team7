@@ -46,7 +46,7 @@ func main() {
 		// Exam three
 		router.GET("/asymmetric", controller.Asymmetric)
 		router.POST("/checkAnswerAsymmetric", controller.CheckDecryptedText)
-		router.GET("/checkFinalAnswer/:book_title", controller.CheckFinalAnswer)
+		router.POST("/checkFinalAnswer", controller.CheckFinalAnswer)
 
 	}
 
