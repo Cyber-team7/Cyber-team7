@@ -12,6 +12,7 @@ import "aos/dist/aos.css";
 
 // Import Services
 import { getSymmetricData } from "../../../services";
+import { message } from "antd";
 
 const Review = () => {
   const [symmetricData, setSymmetricData] = useState<{
@@ -36,13 +37,17 @@ const Review = () => {
     fetchSymmetricData();
   }, []);
 
+  const handleHint = () => {
+    message.info("https://www.devglan.com/online-tools/text-encryption-decryption?fbclid=IwY2xjawH7WDxleHRuA2FlbQIxMAABHRcRTuslkqP__bX69WMMu5-iU-fBQ7jZEcXFWbKsql1zXX_uNC8pfgWmYQ_aem__rOdWcKo1ayMcMObRgTgyw#google_vignette");
+  };
+
   return (
     <div className="review section">
       <div className="secContainer">
         <center className="secTitle" style={{ marginBottom: "50px" }}>
           Game Two : What People Say
           <p style={{ color: "gray", fontSize: "16px" }}>
-            Symmetric cryptography Example Game!
+            Symmetric cryptography Game!
           </p>
         </center>
 
@@ -57,11 +62,10 @@ const Review = () => {
             </div>
 
             <p>
-              สวัสดีทุกคน ฉันต้องการให้ช่วยหาสถานที่ในมหาลัยหน่อยได้ไหม
-              บังเอิญว่าฉันจำไม่ได้ว่าที่ไหน เเต่ฉันอยากได้เป็นชื่อสถานที่นะ รบกวนช่วยหาที?
+              สวัสดีทุกคน ฉันต้องการให้ช่วยหาสถานที่ในมหาลัยหน่อยได้ไหม?
             </p>
 
-            <div className="name">Nicole Webb</div>
+            <div className="name">Bob</div>
           </div>
 
           <div
@@ -74,16 +78,21 @@ const Review = () => {
             </div>
 
             <p>
-              ได้สิ! เเต่ฉันเองก็ไม่มั่นใจนะว่าอยู่ตรงไหน
-              เเต่พอมีข้อมูลอยู่เเต่เธอต้องหาเอง
+              ฉันพอมีข้อมูลอยู่บางส่วน หวังว่าจะช่วยได้นะ
               <p>
                 <strong>
                   {symmetricData ? symmetricData.encryptedText : "Loading..."}
                 </strong>
               </p>
+              <button
+                className="btn flex"
+                onClick={handleHint} // Call the function directly
+              >
+                Hint
+              </button>
             </p>
 
-            <div className="name">Lidney Josline</div>
+            <div className="name">Eve</div>
           </div>
 
           <div
@@ -96,11 +105,11 @@ const Review = () => {
             </div>
 
             <p>
-              ฉันว่าข้อมูลมันยากเกินที่จะหานะ งั้นเดี๋ยวใบเพิ่มให้ :{" "}
+              ฉันเผลอทำกุญแจหาย มีใครเห็นกุญแจฉันไหม{" "}
               <img src={cookie} alt="cookiecookie" />
             </p>
 
-            <div className="name">Rupert Loreot</div>
+            <div className="name">Alice</div>
           </div>
         </div>
       </div>

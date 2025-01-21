@@ -78,7 +78,7 @@ const Offer = () => {
     if (id === 1 || id === 3) {
       message.info("Hint: ให้สังเกต Description ลอง Click รูป"); // Message for id 1 and 3
     } else if (id === 2) {
-      message.info("Hint: ให้สังเกต Description ลอง Click รูป"); // Message for id 2
+      message.info("https://www.dcode.fr/hash-function"); // Message for id 2
     }
   };
 
@@ -88,7 +88,7 @@ const Offer = () => {
         <div data-aos="fade-up" data-aos-duration="2000" className="secIntro">
           <h2 className="secTitle">Game One</h2>
           <p style={{ fontWeight: "bold", fontSize: "18px" }}>
-            Hash function Example Game!
+            Hash function Game!
           </p>
         </div>
 
