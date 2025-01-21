@@ -78,7 +78,7 @@ const Offer = () => {
     if (id === 1 || id === 3) {
       message.info("Hint: ให้สังเกต Description ลอง Click รูป"); // Message for id 1 and 3
     } else if (id === 2) {
-      message.info("Hint: ให้สังเกต Description ลอง Click รูป"); // Message for id 2
+      message.info("https://www.dcode.fr/hash-function"); // Message for id 2
     }
   };
 
