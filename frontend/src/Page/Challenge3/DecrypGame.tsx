@@ -70,14 +70,15 @@ const CipherGame: React.FC = () => {
   };
 
   const handleCheckFinalAnswer = async () => {
-    setLoading(true);
+    setLoading(true); // เริ่มโหลด
     try {
-      const finalAnswerData = await checkFinalAnswer(finalAnswerText);
+      const finalAnswerData = await checkFinalAnswer(finalAnswerText); // เรียกฟังก์ชันตรวจสอบคำตอบ
       if (finalAnswerData) {
         notification.success({
-          message: "Success",
-          description: "Final answer is correct!",
+          message: "Success 🎉",
+          description: "Final answer is correct!🎉",
         });
+        setIsModalVisible(false); // ปิด Modal
       } else {
         notification.error({
           message: "Error",
@@ -88,12 +89,13 @@ const CipherGame: React.FC = () => {
       console.error("Error verifying final answer:", error);
       notification.error({
         message: "Error",
-        description: "An error occurred while verifying final answer.",
+        description: "An error occurred while verifying the final answer. Please try again.",
       });
     } finally {
-      setLoading(false);
+      setLoading(false); // จบการโหลด
     }
   };
+  
 
   const handleCancel = () => {
     setIsModalVisible(false);
@@ -260,25 +262,37 @@ const CipherGame: React.FC = () => {
             Close
           </Button>,
         ]}
+        width="800px"
+        bodyStyle={{ padding: "30px" }} 
       >
-        <div style={{ display: "flex", justifyContent: "space-around", alignItems: "center" }}>
-          <img
-            src={gray}
-            alt="Image 1"
-            style={{ width: "150px", height: "150px", objectFit: "cover", borderRadius: "8px" }}
-          />
-          <img
-            src={hat}
-            alt="Image 2"
-            style={{ width: "150px", height: "150px", objectFit: "cover", borderRadius: "8px" }}
-          />
-          <img
-            src={hack}
-            alt="Image 3"
-            style={{ width: "150px", height: "150px", objectFit: "cover", borderRadius: "8px" }}
-          />
+        <div style={{ display: "flex", justifyContent: "space-around", alignItems: "center", gap: "20px" }}>
+          <div style={{ textAlign: "center" }}>
+            <img
+              src={gray}
+              alt="Image 1"
+              style={{ width: "150px", height: "150px", objectFit: "cover", borderRadius: "8px" }}
+            />
+            <p>Xxxx</p>
+          </div>
+          <div style={{ textAlign: "center" }}>
+            <img
+              src={hat}
+              alt="Image 2"
+              style={{ width: "150px", height: "150px", objectFit: "cover", borderRadius: "8px" }}
+            />
+            <p>xxx</p>
+          </div>
+          <div style={{ textAlign: "center" }}>
+            <img
+              src={hack}
+              alt="Image 3"
+              style={{ width: "150px", height: "150px", objectFit: "cover", borderRadius: "8px" }}
+            />
+            <p>xxxxxxx</p>
+          </div>
         </div>
-        <h3 style={{ color: "#7a7a7a", marginBottom: "40px" }}>Hint: 3 words</h3>
+
+        <h3 style={{ color: "#7a7a7a", marginBottom: "10px", marginTop:"40px" }}>Hint: คุณสามารถหาสิ่งนี้ได้จากคำตอบที่เป็น Link ก่อนหน้านี้</h3>
         <Input
           placeholder="Enter Your Final Answer"
           value={finalAnswerText}

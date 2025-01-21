@@ -88,7 +88,7 @@ const Offer = () => {
         <div data-aos="fade-up" data-aos-duration="2000" className="secIntro">
           <h2 className="secTitle">Game One</h2>
           <p style={{ fontWeight: "bold", fontSize: "18px" }}>
-            Hash function Example Game!
+            Hash function Game!
           </p>
         </div>
 
