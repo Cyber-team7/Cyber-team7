@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
-import { Card, Input, Button, Modal } from 'antd';
-import gray from "../../assets/gray.png"
-import hat from "../../assets/hat.jpg"
-import hack from "../../assets/hack.jpg"
+import React, { useEffect, useState } from "react";
+import { Card, Input, Button, Modal, notification, message } from "antd";
+import gray from "../../assets/gray.png";
+import hat from "../../assets/hat.jpg";
+import hack from "../../assets/hack.jpg";
+import Aos from "aos";
+import { getAsymmetricData, checkDecryptedText, checkFinalAnswer } from "../../services";
 
 const gridStyle: React.CSSProperties = {
   width: '30%',
@@ -15,42 +17,116 @@ const gridStyle: React.CSSProperties = {
   backgroundColor: '#f9f9f9',
 };
 
+
 const CipherGame: React.FC = () => {
-  const [plainText, setPlainText] = useState('cookie'); // ตัวอย่าง Plain Text ที่ถูกต้อง
-  const [inputValue, setInputValue] = useState<string>('');
+  const [encryptionText, setEncryptionText] = useState<string | null>(null);
+  const [publicKey, setPublicKey] = useState<string[]>([]);
+  const [decryptedText, setDecryptedText] = useState<string>("");
+  const [finalAnswerText, setFinalAnswerText] = useState<string>("");
   const [feedback, setFeedback] = useState<string | null>(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
-  const handleSubmit = () => {
-    if (inputValue === "cookie") {
-      setFeedback(null); // ล้างข้อความแจ้งเตือน
-      setIsModalVisible(true); // แสดง Pop-up
-    } else {
-      setFeedback('Incorrect. Try again! ❌');
+  useEffect(() => {
+    Aos.init({ duration: 2000 });
+
+    const fetchData = async () => {
+      try {
+        const data = await getAsymmetricData();
+        if (data) {
+          setEncryptionText(data.encryptedText);
+          setPublicKey(data.publicKey);
+        }
+      } catch (error) {
+        console.error("Error fetching asymmetric data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const handleCheckDecryptedText = async () => {
+    setLoading(true);
+    try {
+      const decryptedData = await checkDecryptedText(decryptedText);
+      if (decryptedData) {
+        notification.success({
+          message: "Success",
+          description: "Decrypted text is correct!",
+        });
+        setIsModalVisible(true);
+      } else {
+        setFeedback("Incorrect. Try again! ❌");
+      }
+    } catch (error) {
+      console.error("Error verifying decrypted text:", error);
+      notification.error({
+        message: "Error",
+        description: "An error occurred while verifying decrypted text.",
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleSubmit2 = () => {
-    if (inputValue === "cookie") {
-      setFeedback(null); // ล้างข้อความแจ้งเตือน
-      setIsModalVisible(true); // แสดง Pop-up
-    } else {
-      setFeedback('Incorrect. Try again! ❌');
+  const handleCheckFinalAnswer = async () => {
+    setLoading(true);
+    try {
+      const finalAnswerData = await checkFinalAnswer(finalAnswerText);
+      if (finalAnswerData) {
+        notification.success({
+          message: "Success",
+          description: "Final answer is correct!",
+        });
+      } else {
+        notification.error({
+          message: "Error",
+          description: "Final answer is incorrect.",
+        });
+      }
+    } catch (error) {
+      console.error("Error verifying final answer:", error);
+      notification.error({
+        message: "Error",
+        description: "An error occurred while verifying final answer.",
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleCancel = () => {
-    setIsModalVisible(false); // ปิด Pop-up
+    setIsModalVisible(false);
+  };
+
+  const handleCopyText = () => {
+    if (decryptedText) {
+      navigator.clipboard.writeText(decryptedText);
+      notification.success({
+        message: "Copied!",
+        description: "The text has been copied to the clipboard.",
+      });
+    } else {
+      notification.warning({
+        message: "No Text",
+        description: "Please enter some text to copy.",
+      });
+    }
+  };
+
+  const handleHint = () => {
+    message.info("https://www.devglan.com/online-tools/rsa-encryption-decryption");
   };
 
   return (
-    <div style={{ fontFamily: 'Arial, sans-serif', padding: '20px' }}>
+    <div style={{ fontFamily: "Arial, sans-serif", padding: "20px" }}>
       <center>
-        <h1 style={{ color: '#3ab3a7', marginBottom: '20px' }}>This is the last game!</h1>
-        <h3 style={{ color: '#7a7a7a', marginBottom: '40px' }}>
-          Chose the correct Public key for Decrypt the Text
+        <h1 style={{ color: "#3ab3a7", marginBottom: "20px" }}>This is the last game!</h1>
+        <h3 style={{ color: "#7a7a7a", marginBottom: "40px" }}>
+          Choose the correct Public key to Decrypt the Text
         </h3>
       </center>
+
       <Card
         style={{
           margin: '0 auto',
@@ -73,68 +149,110 @@ const CipherGame: React.FC = () => {
 
       <div
         style={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          justifyContent: 'center',
-          marginTop: '40px',
+          display: "flex",
+          flexWrap: "wrap",
+          justifyContent: "center",
+          marginTop: "40px",
         }}
       >
-        {Array.from({ length: 12 }).map((_, index) => (
+        {publicKey.map((key, index) => (
           <Card.Grid
             key={index}
             style={gridStyle}
-            onClick={() => setInputValue(`PublicKey${index + 1}`)}
+            onClick={() => setDecryptedText(key)}
           >
-            Public Key
+            Public Key {index + 1}
           </Card.Grid>
         ))}
       </div>
 
-      <div style={{ textAlign: 'center', marginTop: '40px' }}>
-        <h3 style={{ color: '#3ab3a7' }}>Submit Your Answer to get next hint</h3>
+      <div style={{ textAlign: "center", marginTop: "40px" }}>
+    
+        
+      
+        <h3 style={{ color: "#3ab3a7" }}>Submit Your Answer to get next hint</h3>
+
+          <div style={{ textAlign: "center", marginTop: "10px" }}>
+            <button
+              className="btn flex"
+                onClick={handleHint} // Call the function directly
+              >
+               Hint
+            </button>
+          </div>
         <Input
           placeholder="Enter Your Answer"
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
+          value={decryptedText}
+          onChange={(e) => setDecryptedText(e.target.value)}
           style={{
-            width: '60%',
-            margin: '20px auto',
-            padding: '10px',
-            fontSize: '16px',
-            borderRadius: '8px',
+            width: "60%",
+            margin: "20px auto",
+            padding: "10px",
+            fontSize: "16px",
+            borderRadius: "8px",
           }}
         />
-      </div>
-      <center>
+
+      <Button
+        type="primary"
+        style={{
+          marginLeft: "10px",
+          backgroundColor: "#3ab3a7",
+          border: "none",
+          fontSize: "16px",
+          padding: "10px 20px",
+          borderRadius: "8px",
+        }}
+        onClick={handleCopyText}
+      >
+        Copy
+      </Button>
+
         <Button
+          type="primary"
+          style={{
+            marginLeft: "10px",
+            backgroundColor: "#3ab3a7",
+            border: "none",
+            fontSize: "16px",
+            padding: "10px 20px",
+            borderRadius: "8px",
+          }}
+          onClick={handleCheckDecryptedText}
+          loading={loading}
+        >
+          Submit
+        </Button>
+          <Button
             type="primary"
             style={{
-              backgroundColor: '#3ab3a7',
-              border: 'none',
-              fontSize: '16px',
-              padding: '20px 30px',
-              borderRadius: '8px',
+              marginLeft: "10px",
+              backgroundColor: "#f44336",
+              border: "none",
+              fontSize: "16px",
+              padding: "10px 20px",
+              borderRadius: "8px",
             }}
-            onClick={handleSubmit}
+            onClick={() => setDecryptedText("")}
           >
-            Submit
-          </Button>
-        </center>
+            Clear
+        </Button>
         {feedback && (
           <p
             style={{
-              marginTop: '20px',
-              fontSize: '18px',
-              color: 'red',
+              marginTop: "20px",
+              fontSize: "18px",
+              color: "red",
             }}
           >
             {feedback}
           </p>
         )}
+      </div>
 
       {/* Modal Pop-up */}
       <Modal
-        title="We want this in "
+        title="We want this in"
         visible={isModalVisible}
         onCancel={handleCancel}
         footer={[
@@ -143,61 +261,50 @@ const CipherGame: React.FC = () => {
           </Button>,
         ]}
       >
-        <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center' }}>
-          <div style={{ textAlign: 'center' }}>
-            <img
-              src={gray}
-              alt="Image 1"
-              style={{ width: '150px', height: '150px', objectFit: 'cover', borderRadius: '8px', marginBottom: '10px' }}
-            />
-          </div>
-          <div style={{ textAlign: 'center' }}>
-            <img
-              src={hat}
-              alt="Image 2"
-              style={{ width: '150px', height: '150px', objectFit: 'cover', borderRadius: '8px', marginBottom: '10px' }}
-            />
-          </div>
-          <div style={{ textAlign: 'center' }}>
-            <img
-              src={hack}
-              alt="Image 3"
-              style={{ width: '150px', height: '150px', objectFit: 'cover', borderRadius: '8px', marginBottom: '10px' }}
-            />
-          </div>
-          
+        <div style={{ display: "flex", justifyContent: "space-around", alignItems: "center" }}>
+          <img
+            src={gray}
+            alt="Image 1"
+            style={{ width: "150px", height: "150px", objectFit: "cover", borderRadius: "8px" }}
+          />
+          <img
+            src={hat}
+            alt="Image 2"
+            style={{ width: "150px", height: "150px", objectFit: "cover", borderRadius: "8px" }}
+          />
+          <img
+            src={hack}
+            alt="Image 3"
+            style={{ width: "150px", height: "150px", objectFit: "cover", borderRadius: "8px" }}
+          />
         </div>
-        <h3 style={{ color: '#7a7a7a', marginBottom: '40px' }}>
-            Hint : 3 words
-        </h3>
-        <h1 style={{ color: '#3ab3a7', marginBottom: '20px' }}>What's you found?</h1>
+        <h3 style={{ color: "#7a7a7a", marginBottom: "40px" }}>Hint: 3 words</h3>
         <Input
-          placeholder="Enter Your Answer"
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
+          placeholder="Enter Your Final Answer"
+          value={finalAnswerText}
+          onChange={(e) => setFinalAnswerText(e.target.value)}
           style={{
-            width: '60%',
-            margin: '20px auto',
-            padding: '10px',
-            fontSize: '16px',
-            borderRadius: '8px',
+            width: "60%",
+            margin: "20px auto",
+            padding: "10px",
+            fontSize: "16px",
+            borderRadius: "8px",
           }}
         />
         <Button
-            type="primary"
-            style={{
-              backgroundColor: '#3ab3a7',
-              border: 'none',
-              fontSize: '16px',
-              padding: '20px 30px',
-              borderRadius: '8px',
-              marginLeft:"5px"
-            }}
-            onClick={handleSubmit2}
-          >
-            Submit
+          type="primary"
+          style={{
+            backgroundColor: "#3ab3a7",
+            border: "none",
+            fontSize: "16px",
+            padding: "20px 30px",
+            borderRadius: "8px",
+          }}
+          onClick={handleCheckFinalAnswer}
+          loading={loading}
+        >
+          Submit
         </Button>
-
       </Modal>
     </div>
   );
