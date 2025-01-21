@@ -47,7 +47,7 @@ const Review = () => {
         <center className="secTitle" style={{ marginBottom: "50px" }}>
           Game Two : What People Say
           <p style={{ color: "gray", fontSize: "16px" }}>
-            Symmetric cryptography Example Game!
+            Symmetric cryptography Game!
           </p>
         </center>
 
