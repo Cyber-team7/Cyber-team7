@@ -16,6 +16,7 @@ const Data = [
     destTitle: "Calm Oasis Nest, Surrounding Openness, Love, Elegance",
     location: "Click Hint",
     price: "Picture One",
+    Brint: "Christian time",
   },
   {
     id: 2,
@@ -23,6 +24,7 @@ const Data = [
     destTitle: "Peace, Love, Unity, Serenity",
     location: "Click Hint",
     price: "Picture Answer",
+    BC: "",
   },
   {
     id: 3,
@@ -31,16 +33,17 @@ const Data = [
       "Navigating Endless Terrain With Opportunities, Resilience, Knowledge",
     location: "Click Hint",
     price: "Picture Two",
+    BC: "",
   },
 ];
 
 const Offer = () => {
-  const [inputValue, setInputValue] = useState<string>(""); // State to store input value
-  const [answer, setAnswer] = useState<string>(""); // State to store the answer
+  const [inputValue, setInputValue] = useState<string>(""); 
+  const [answer, setAnswer] = useState<string>(""); 
 
   useEffect(() => {
     Aos.init({ duration: 2000 });
-    setAnswer("Home2"); // Set the default answer for id = 2
+    setAnswer("Suranaree"); 
   }, []);
 
   const handleImageClick = async (id: number) => {
@@ -67,7 +70,7 @@ const Offer = () => {
   const handleSubmit = () => {
     if (inputValue === answer) {
       message.error("ผิด คุณโดนหลอก"); // Display "wrong" message
-    } else if (inputValue === "15000") {
+    } else if (inputValue === "9990") {
       message.success("ผ่านด่าน 1"); // Display success message
     } else {
       message.error("คำตอบผิด! ลองใหม่อีกครั้ง"); // Display generic error message
@@ -93,7 +96,7 @@ const Offer = () => {
         </div>
 
         <div className="mainContent grid">
-          {Data.map(({ id, imgSrc, destTitle, price }) => {
+          {Data.map(({ id, imgSrc, destTitle, price,Brint }) => {
             return (
               <div
                 key={id}
@@ -144,7 +147,7 @@ const Offer = () => {
                       </button>
                     </center>
                   )}
-
+                    <h4 style={{color:"red"}}>{Brint}</h4>
                   <button
                     className="btn flex"
                     onClick={() => handleHint(id)} // Add hint click handler

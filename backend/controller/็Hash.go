@@ -10,7 +10,7 @@ import (
 )
 
 func GenerateHashQ1(c *gin.Context) {
-	keyOne := "7000"
+	keyOne := "2533"
 	hash := sha256.Sum256([]byte(keyOne))
 	c.JSON(http.StatusOK, gin.H{                    
 		"hash":     fmt.Sprintf("%x", hash),      
@@ -39,10 +39,10 @@ func TrackHash(c *gin.Context) {
 }
 
 func CheckAnswerHash(c *gin.Context) {
-	keyOne := "7000"
+	keyOne := "1990"
 	keyTwo := "8000"
 
-	expectedSum := 15000
+	expectedSum := 9990
 
 	hashOne := sha256.Sum256([]byte(keyOne))
 	hashTwo := sha256.Sum256([]byte(keyTwo))
