@@ -21,7 +21,7 @@ const Home = () => {
             Welcome to the game
             </h1>
             <p data-aos="fade-up" data-aos-duration="2500" className="subTitle">
-              Team 7 Cookie Cookie
+              Team 7 cookiecookie
             </p>
           </div>
         </div>
